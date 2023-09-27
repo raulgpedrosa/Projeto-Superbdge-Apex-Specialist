@@ -2,7 +2,7 @@ public with sharing class MaintenanceRequestHelper {
 	public static void updateWorkOrders(List<Case> novoCaso) { 
 		List<Case> nCasos = new List<Case>();
         List<Case> nData = new List<Case>();
-        List<Equipment_Maintenance_Item__c> equipamentos = [SELECT Equipment__c, Quantity__c, Equipment__r.Maintenance_Cycle__c FROM Equipment_Maintenance_Item__c WHERE Maintenance_Request__c =: novoCaso[0].Id];
+        List<Equipment_Maintenance_Item__c> equipamentos = [SELECT Equipment__c, Quantity__c, Equipment__r.Maintenance_Cycle__c FROM Equipment_Maintenance_Item__c  WHERE Maintenance_Request__c =: novoCaso[0].Id WITH SECURITY_ENFORCED];
         System.debug('Lista para add os dados que serão inseridos: ' + nCasos);
         Date menorDataVencimento = null;
         for (Case c : novoCaso) {
@@ -23,7 +23,7 @@ public with sharing class MaintenanceRequestHelper {
             insert nCasos;
             System.debug('Novo caso criado: ' + nCasos);
         
-        List<Equipment_Maintenance_Item__c> AddNovosEquipamentos = new List<Equipment_Maintenance_Item__c>();
+        List<Equipment_Maintenance_Item__c> addNovosEquipamentos = new List<Equipment_Maintenance_Item__c>();
         for(Equipment_Maintenance_Item__c c : equipamentos){
                 Equipment_Maintenance_Item__c equip = new Equipment_Maintenance_Item__c();
             	equip.Maintenance_Request__c = nCasos.get(0).Id;
@@ -47,7 +47,7 @@ public with sharing class MaintenanceRequestHelper {
     }
         
         System.debug('Menor data: ' + menorDataVencimento);
-        insert AddNovosEquipamentos;
+        insert addNovosEquipamentos;
         System.debug('Inserção dos Equipment_Maintenance_Item__c: ' + AddNovosEquipamentos);
         
    } 
